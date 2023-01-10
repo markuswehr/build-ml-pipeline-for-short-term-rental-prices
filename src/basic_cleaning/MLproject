@@ -1,0 +1,38 @@
+name: basic_cleaning
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      input_artifact:
+        description: "Path to input artifact in W&B"
+        type: string
+
+      output_artifact:
+        description: "Path to output artifact in W&B"
+        type: string
+
+      output_type:
+        description: "Type as which output artifact is saved in W&B"
+        type: string
+
+      output_description:
+        description: "Description of the output artifact"
+        type: string
+
+      min_price:
+        description: "Minimum price threshold to cut outliers"
+        type: float
+
+      max_price:
+        description: "Maximum price threshold to cut outliers"
+        type: float
+
+    command: >-
+        python run.py   --input_artifact {input_artifact} \
+                        --output_artifact {output_artifact} \
+                        --output_type {output_type} \
+                        --output_description {output_description} \
+                        --min_price {min_price} \
+                        --max_price {max_price} \
