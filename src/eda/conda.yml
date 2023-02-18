@@ -5,13 +5,9 @@ channels:
 dependencies:
   - jupyterlab=3.0.12
   - seaborn=0.11.1
-  - pandas=1.4.2
+  - pandas=1.2.3
   - pip=20.3.3
-  - pandas-profiling=3.1.0
+  - pandas-profiling=2.11.0
   - pyarrow=2.0
-  - numpy=1.22.3
-  - MarkupSafe=2.0.1
-  - Jinja2=3.1.1
-  - ipywidgets=7.7.2
   - pip:
-      - wandb==0.12.17
+      - wandb==0.10.31
