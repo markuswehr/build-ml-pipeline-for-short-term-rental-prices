@@ -98,37 +98,31 @@ def go(args):
     ######################################
     # Save the sk_pipe pipeline as a mlflow.sklearn model in the directory "random_forest_dir"
     # HINT: use mlflow.sklearn.save_model
-    signature = mlflow.models.infer_signature(X_val, y_pred)
+    logger.info("Save model to MLflow")
+    mlflow.sklearn.save_model(
+            sk_pipe,
+            "random_forest_dir",
+            serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
+            input_example=X_val.iloc[:2],
+    )
+    ######################################
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        logger.info("Save model to MLflow")
-        export_path = os.path.join(temp_dir, "random_forest_dir")
-        mlflow.sklearn.save_model(
-                sk_pipe,
-                export_path,
-                serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
-                signature=signature,
-                input_example=X_val.iloc[:2],
-            )
-        ######################################
-
-        ######################################
-        # Upload the model we just exported to W&B
-        # HINT: use wandb.Artifact to create an artifact. Use args.output_artifact as artifact name, "model_export" as
-        # type, provide a description and add rf_config as metadata. Then, use the .add_dir method of the artifact instance
-        # you just created to add the "random_forest_dir" directory to the artifact, and finally use
-        # run.log_artifact to log the artifact to the run
-        logger.info("Exporting artifact to W&B")
-        artifact = wandb.Artifact(
-            name=args.output_artifact,
-            type="model_export",
-            description="Modle trained based on sk_pipe",
-            metadata=args.rf_config,
-        )
-        artifact.add_dir(export_path)
-        run.log_artifact(artifact)
-        artifact.wait()
-        ######################################
+    ######################################
+    # Upload the model we just exported to W&B
+    # HINT: use wandb.Artifact to create an artifact. Use args.output_artifact as artifact name, "model_export" as
+    # type, provide a description and add rf_config as metadata. Then, use the .add_dir method of the artifact instance
+    # you just created to add the "random_forest_dir" directory to the artifact, and finally use
+    # run.log_artifact to log the artifact to the run
+    logger.info("Exporting artifact to W&B")
+    artifact = wandb.Artifact(
+        name=args.output_artifact,
+        type="model_export",
+        description="Modle trained based on sk_pipe",
+        metadata=rf_config,
+    )
+    artifact.add_dir("random_forest_dir")
+    run.log_artifact(artifact)
+    ######################################
 
     # Plot feature importance
     logger.info("Plotting feature importance")
